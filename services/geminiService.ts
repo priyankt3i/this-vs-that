@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { ComparisonData, WittyCategoryMismatchError } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -90,6 +90,39 @@ export const fetchComparison = async (productOne: string, productTwo: string): P
         }
         console.error("Error fetching comparison from Gemini API:", error);
         throw new Error("Failed to get a valid comparison from the AI. Please try different products or rephrase your request.");
+    }
+};
+
+export const generatePlaceholderImage = async (productName: string): Promise<string | null> => {
+    const prompt = `
+        Create a funny, child-like hand drawing of the product: "${productName}".
+        The drawing style should look like it was made by a 5-year-old with crayons. It should be simple, colorful, and slightly silly, but still recognizable as the product.
+        Crucially, you MUST include the following text phrase written somewhere clearly on the image, in a hand-written style that fits the drawing:
+        ":P Google didn't let me use Google Search for images"
+    `;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash-image-preview',
+            contents: {
+                parts: [{ text: prompt }],
+            },
+            config: {
+                responseModalities: [Modality.IMAGE, Modality.TEXT],
+            },
+        });
+
+        for (const part of response.candidates[0].content.parts) {
+            if (part.inlineData) {
+                const base64ImageBytes = part.inlineData.data;
+                const mimeType = part.inlineData.mimeType;
+                return `data:${mimeType};base64,${base64ImageBytes}`;
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error(`Error generating placeholder image for ${productName}:`, error);
+        return null; 
     }
 };
 

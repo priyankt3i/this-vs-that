@@ -5,7 +5,7 @@ import ComparisonTable from './components/ComparisonTable';
 import AiAnalysis from './components/AiAnalysis';
 import Loader from './components/Loader';
 import ErrorDisplay from './components/ErrorDisplay';
-import { fetchComparison } from './services/geminiService';
+import { fetchComparison, generatePlaceholderImage } from './services/geminiService';
 import { ComparisonData, WittyCategoryMismatchError } from './types';
 import { getRandomIntro } from './utils/wittyIntros';
 
@@ -115,6 +115,27 @@ const App: React.FC = () => {
 
         try {
             const data = await fetchComparison(productOne, productTwo);
+
+            const placeholderPromises = [];
+            if (!data.productOneImageUrl) {
+                placeholderPromises.push(
+                    generatePlaceholderImage(data.productOneName).then(img => {
+                        data.productOneImageUrl = img || undefined;
+                    })
+                );
+            }
+            if (!data.productTwoImageUrl) {
+                placeholderPromises.push(
+                    generatePlaceholderImage(data.productTwoName).then(img => {
+                        data.productTwoImageUrl = img || undefined;
+                    })
+                );
+            }
+
+            if (placeholderPromises.length > 0) {
+                await Promise.all(placeholderPromises);
+            }
+
             setComparisonResult(data);
         } catch (err: unknown) {
             if (err instanceof WittyCategoryMismatchError) {
