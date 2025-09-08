@@ -1,0 +1,5 @@
+{
+  "name": "This vs. That: AI Product Comparator",
+  "description": "An intelligent web application that takes two product names and generates a detailed side-by-side comparison table and a contextual AI-powered analysis.",
+  "requestFramePermissions": []
+}
