@@ -1,4 +1,3 @@
-
 export interface Feature {
   featureName: string;
   productOneValue: string;
@@ -21,6 +20,8 @@ export interface CategoryMismatchInfo {
 export interface ComparisonData {
   productOneName: string;
   productTwoName: string;
+  productOneImageUrl?: string;
+  productTwoImageUrl?: string;
   comparison: ComparisonCategory[];
   analysis: string;
   categoryMismatch?: CategoryMismatchInfo;

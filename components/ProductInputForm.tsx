@@ -98,20 +98,20 @@ const ProductInputForm: React.FC<ProductInputFormProps> = ({
         if (!activeInput || !showBox) return null;
 
         return (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-slate-600 rounded-lg shadow-lg z-10 animate-fade-in-down">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg shadow-lg z-10 animate-fade-in-down">
                 <ul className="py-1 max-h-60 overflow-y-auto">
-                    {loadingSuggestions && <li className="px-4 py-2 text-slate-400">Loading...</li>}
+                    {loadingSuggestions && <li className="px-4 py-2 text-slate-500 dark:text-slate-400">Loading...</li>}
                     {!loadingSuggestions && suggestions.map((suggestion, index) => (
                         <li 
                             key={index} 
-                            className="px-4 py-2 text-white hover:bg-sky-700 cursor-pointer transition-colors duration-150"
+                            className="px-4 py-2 text-slate-800 dark:text-white hover:bg-sky-100 dark:hover:bg-sky-700 cursor-pointer transition-colors duration-150"
                             onClick={() => handleSuggestionClick(suggestion)}
                             onMouseDown={(e) => e.preventDefault()} // Prevents input blur on click
                         >
                             {suggestion}
                         </li>
                     ))}
-                    {!loadingSuggestions && !hasSuggestions && <li className="px-4 py-2 text-slate-400">No suggestions found</li>}
+                    {!loadingSuggestions && !hasSuggestions && <li className="px-4 py-2 text-slate-500 dark:text-slate-400">No suggestions found</li>}
                 </ul>
             </div>
         );
@@ -127,14 +127,14 @@ const ProductInputForm: React.FC<ProductInputFormProps> = ({
                         onChange={(e) => handleInputChange(e.target.value, setProductOne, 'one')}
                         onFocus={() => setActiveInput('one')}
                         placeholder="e.g., iPhone 15 Pro"
-                        className="w-full px-4 py-3 bg-slate-800 text-white border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-200"
+                        className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                         disabled={isLoading}
                         autoComplete="off"
                     />
                     {activeInput === 'one' && renderSuggestions()}
                 </div>
 
-                <span className="text-slate-400 font-bold text-2xl">vs</span>
+                <span className="text-slate-500 dark:text-slate-400 font-bold text-2xl">vs</span>
 
                 <div className="relative w-full">
                     <input
@@ -143,7 +143,7 @@ const ProductInputForm: React.FC<ProductInputFormProps> = ({
                         onChange={(e) => handleInputChange(e.target.value, setProductTwo, 'two')}
                         onFocus={() => setActiveInput('two')}
                         placeholder="e.g., Samsung Galaxy S24 Ultra"
-                        className="w-full px-4 py-3 bg-slate-800 text-white border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-200"
+                        className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                         disabled={isLoading}
                         autoComplete="off"
                     />
@@ -153,7 +153,7 @@ const ProductInputForm: React.FC<ProductInputFormProps> = ({
                 <button
                     type="submit"
                     disabled={isLoading || !productOne || !productTwo}
-                    className="w-full md:w-auto px-8 py-3 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition duration-200 disabled:bg-slate-500 disabled:cursor-not-allowed shrink-0"
+                    className="w-full md:w-auto px-8 py-3 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 transition duration-200 disabled:bg-slate-400 dark:disabled:bg-slate-500 disabled:cursor-not-allowed shrink-0"
                 >
                     Compare
                 </button>

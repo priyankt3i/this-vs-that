@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { ComparisonData, WittyCategoryMismatchError } from '../types';
 
@@ -9,6 +8,8 @@ const responseSchema = {
     properties: {
         productOneName: { type: Type.STRING },
         productTwoName: { type: Type.STRING },
+        productOneImageUrl: { type: Type.STRING, description: "A URL for a high-quality image of the first product." },
+        productTwoImageUrl: { type: Type.STRING, description: "A URL for a high-quality image of the second product." },
         comparison: {
             type: Type.ARRAY,
             items: {
@@ -57,7 +58,8 @@ export const fetchComparison = async (productOne: string, productTwo: string): P
         **Step 2: Comparison Generation (only if not a mismatch)**
         Identify the shared product category (e.g., Electric Scooter, Smartphone, etc.).
         Based on the category, generate a comprehensive list of relevant specifications and features for comparison. For each feature, you MUST try to find and include a 'learnMoreUrl'. This should be a direct link to a high-quality, reputable external resource (like a manufacturer's page, a Wikipedia article, or a technical glossary) that explains the feature in more detail. If a relevant link cannot be found for a specific feature, omit the 'learnMoreUrl' field for that feature.
-        The analysis should be a detailed, contextual summary explaining the key differences, pros, and cons of each product. Conclude with a recommendation based on potential user needs.
+        Crucially, you must also find and provide a high-quality, publicly accessible image URL for each product. The fields for these must be 'productOneImageUrl' and 'productTwoImageUrl'. If you cannot find a suitable image for a product, return an empty string for its corresponding URL.
+        The analysis should be a funny, quirky but detailed and should have contextual summary explaining the key differences, pros, and cons of each product. Conclude with a recommendation based on potential user needs. Keep is funny!
 
         Your final output MUST be a single JSON object. Do not include any text outside of the JSON object.
     `;
