@@ -17,6 +17,11 @@ export interface CategoryMismatchInfo {
     wittyRemark: string;
 }
 
+export interface WinnerInfo {
+    winnerName: string;
+    winningReason: string;
+}
+
 export interface ComparisonData {
   productOneName: string;
   productTwoName: string;
@@ -24,6 +29,7 @@ export interface ComparisonData {
   productTwoImageUrl?: string;
   comparison: ComparisonCategory[];
   analysis: string;
+  winnerInfo?: WinnerInfo;
   categoryMismatch?: CategoryMismatchInfo;
 }
 

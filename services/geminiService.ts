@@ -32,6 +32,13 @@ const responseSchema = {
             },
         },
         analysis: { type: Type.STRING },
+        winnerInfo: {
+            type: Type.OBJECT,
+            properties: {
+                winnerName: { type: Type.STRING, description: "The name of the winning product." },
+                winningReason: { type: Type.STRING, description: "A short, brutal, and funny reason why the winner was chosen over the loser." }
+            }
+        },
         categoryMismatch: {
             type: Type.OBJECT,
             properties: {
@@ -46,20 +53,23 @@ const responseSchema = {
 
 export const fetchComparison = async (productOne: string, productTwo: string): Promise<ComparisonData> => {
     const prompt = `
-        You are an expert product comparison AI named 'ThisVsThat'. Your goal is to provide a detailed, side-by-side technical comparison of two products provided by the user, followed by a contextual analysis.
+        You are an expert product comparison AI named 'ThisVsThat'. Your goal is to provide a detailed, side-by-side technical comparison of two products provided by the user, followed by a contextual analysis, and finally, declare a winner.
 
         The user wants to compare: "${productOne}" and "${productTwo}".
 
         **Step 1: Sanity Check & Witty Remark**
         First, determine if these two products are in remotely comparable categories.
-        - If they are from completely different, incomparable categories (e.g., a 'Smartphone' and a 'Car', or 'My Mom' vs 'My Dad'), set 'isMismatch' to true, identify each product's category, and generate a short, funny, contextual 'wittyRemark' explaining why the comparison is absurd. The remark should be tailored to the specific inputs and have a title and subtext separated by a newline. For example, for "My Mom" vs "My Dad", a good remark would be "This is Above My Pay Grade\\nMaybe try asking your therapist for a comparison chart?". If a mismatch is detected, STOP. Do not generate a comparison or analysis.
-        - If they are comparable (e.g., two smartphones, two electric scooters), set 'isMismatch' to false, leave 'wittyRemark' as an empty string, and proceed to Step 2.
+        - If they are from completely different, incomparable categories (e.g., a 'Smartphone' and a 'Car'), set 'isMismatch' to true, identify each product's category, and generate a short, funny, contextual 'wittyRemark' explaining why the comparison is absurd. If a mismatch is detected, STOP. Do not generate a comparison or analysis.
+        - If they are comparable, set 'isMismatch' to false and proceed.
 
         **Step 2: Comparison Generation (only if not a mismatch)**
-        Identify the shared product category (e.g., Electric Scooter, Smartphone, etc.).
-        Based on the category, generate a comprehensive list of relevant specifications and features for comparison. For each feature, you MUST try to find and include a 'learnMoreUrl'. This should be a direct link to a high-quality, reputable external resource (like a manufacturer's page, a Wikipedia article, or a technical glossary) that explains the feature in more detail. If a relevant link cannot be found for a specific feature, omit the 'learnMoreUrl' field for that feature.
-        Crucially, you must also find and provide a high-quality, publicly accessible image URL for each product. The fields for these must be 'productOneImageUrl' and 'productTwoImageUrl'. If you cannot find a suitable image for a product, return an empty string for its corresponding URL.
-        The analysis should be a funny, quirky but detailed and should have contextual summary explaining the key differences, pros, and cons of each product. Conclude with a recommendation based on potential user needs. Keep is funny!
+        Identify the shared product category. Generate a comprehensive list of relevant specifications for comparison. Find a high-quality, publicly accessible image URL for each product ('productOneImageUrl' and 'productTwoImageUrl'). If you cannot find an image, return an empty string for the URL. The analysis should be a funny, quirky but detailed summary explaining the key differences, pros, and cons.
+
+        **Step 3: Declare a Winner (The Final Verdict)**
+        After the analysis, you MUST choose a definitive winner between the two products.
+        - Populate the 'winnerInfo' object.
+        - 'winnerName' must be the exact name of the winning product.
+        - 'winningReason' is the most important part. Write a short, brutal, and funny reason for your choice. It should decisively state why the winner is better by highlighting a key strength of the winner or a glaring weakness of the loser. Be opinionated and entertaining. For example: "The iPhone 15 Pro wins because its camera makes the Galaxy S24's photos look like they were taken with a potato."
 
         Your final output MUST be a single JSON object. Do not include any text outside of the JSON object.
     `;
