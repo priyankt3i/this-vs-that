@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import Header from './components/Header';
 import ProductInputForm from './components/ProductInputForm';
@@ -21,7 +22,7 @@ const useTheme = (): [Theme, () => void] => {
             }
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
-        return 'dark'; // Default for SSR or environments without localStorage
+        return 'dark'; 
     });
 
     const toggleTheme = () => {
@@ -52,9 +53,9 @@ const ImageWithPlaceholder: React.FC<{ src?: string; alt: string }> = ({ src, al
 
     if (!src || imageError) {
         return (
-            <div className="aspect-square w-full bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center border-2 border-slate-200 dark:border-slate-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+            <div className="aspect-square w-full max-w-[240px] bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
             </div>
         );
@@ -64,7 +65,7 @@ const ImageWithPlaceholder: React.FC<{ src?: string; alt: string }> = ({ src, al
         <img
             src={src}
             alt={alt}
-            className="aspect-square w-full object-contain bg-white dark:bg-white/5 rounded-xl p-2 md:p-4 border-2 border-slate-200 dark:border-slate-700"
+            className="aspect-square w-full max-w-[240px] object-contain bg-white dark:bg-white rounded-2xl p-4 shadow-lg border border-slate-100 dark:border-slate-700"
             onError={handleError}
         />
     );
@@ -72,19 +73,23 @@ const ImageWithPlaceholder: React.FC<{ src?: string; alt: string }> = ({ src, al
 
 const ComparisonHeader: React.FC<{ data: ComparisonData }> = ({ data }) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-5 items-center gap-4 md:gap-8">
-            <div className="md:col-span-2 flex flex-col items-center text-center">
+        <div className="grid grid-cols-1 md:grid-cols-5 items-center gap-8 mb-8">
+            <div className="md:col-span-2 flex flex-col items-center text-center animate-fade-in-left">
                 <ImageWithPlaceholder src={data.productOneImageUrl} alt={data.productOneName} />
-                <h2 className="mt-4 text-xl md:text-2xl font-bold text-sky-600 dark:text-sky-300">{data.productOneName}</h2>
+                <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white leading-tight">{data.productOneName}</h2>
+                <div className="mt-2 h-1 w-12 bg-sky-500 rounded-full"></div>
             </div>
             
             <div className="hidden md:flex md:col-span-1 items-center justify-center">
-                <span className="text-5xl font-black text-slate-300 dark:text-slate-600 tracking-widest">VS</span>
+                <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600 font-black text-xl border-4 border-white dark:border-slate-900 shadow-inner">
+                    VS
+                </div>
             </div>
 
-            <div className="md:col-span-2 flex flex-col items-center text-center">
+            <div className="md:col-span-2 flex flex-col items-center text-center animate-fade-in-right">
                 <ImageWithPlaceholder src={data.productTwoImageUrl} alt={data.productTwoName} />
-                <h2 className="mt-4 text-xl md:text-2xl font-bold text-amber-600 dark:text-amber-300">{data.productTwoName}</h2>
+                <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white leading-tight">{data.productTwoName}</h2>
+                <div className="mt-2 h-1 w-12 bg-amber-500 rounded-full"></div>
             </div>
         </div>
     );
@@ -117,6 +122,7 @@ const App: React.FC = () => {
         try {
             const data = await fetchComparison(productOne, productTwo);
 
+            // Parallel image generation/fetching if URL missing
             const placeholderPromises = [];
             if (!data.productOneImageUrl) {
                 placeholderPromises.push(
@@ -160,18 +166,26 @@ const App: React.FC = () => {
         const subtitle = parts.length > 1 ? parts.slice(1).join(': ') : "Let's find out who wins.";
 
         return (
-            <div className="text-center p-8 bg-slate-100/30 dark:bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 animate-fade-in">
-                <h2 className="text-2xl font-semibold text-slate-800 dark:text-white mb-2">{title}</h2>
-                <p className="text-amber-600 dark:text-amber-400 font-serif italic text-xl">{subtitle}</p>
+            <div className="text-center p-12 animate-fade-in mt-12">
+                <h2 className="text-3xl font-bold text-slate-800 dark:text-white mb-3 tracking-tight">{title}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xl font-light">{subtitle}</p>
             </div>
         );
     };
 
     return (
-        <div className="min-h-screen text-slate-900 dark:text-white font-sans flex flex-col">
-            <main className="container mx-auto px-4 py-8 flex-grow">
-                <Header theme={theme} toggleTheme={toggleTheme} />
-                <div className="mt-8">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans flex flex-col transition-colors duration-300 selection:bg-sky-500/30 selection:text-sky-900 dark:selection:text-sky-100">
+            {/* Background Decorations */}
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen opacity-50 animate-blob"></div>
+                <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen opacity-50 animate-blob animation-delay-2000"></div>
+                <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen opacity-50 animate-blob animation-delay-4000"></div>
+            </div>
+
+            <Header theme={theme} toggleTheme={toggleTheme} />
+            
+            <main className="container mx-auto px-4 py-8 flex-grow relative z-10 flex flex-col items-center">
+                <div className="w-full mt-6 md:mt-12">
                     <ProductInputForm
                         productOne={productOne}
                         setProductOne={setProductOne}
@@ -181,12 +195,13 @@ const App: React.FC = () => {
                         isLoading={isLoading}
                     />
                 </div>
-                <div className="mt-12 max-w-7xl mx-auto">
+                
+                <div className="w-full max-w-7xl mt-12">
                     {isLoading && <Loader />}
-                    {error && <ErrorDisplay message={error} isWitty={isWittyError} />}
+                    {error && <div className="mt-8"><ErrorDisplay message={error} isWitty={isWittyError} /></div>}
                     {!isLoading && !error && !comparisonResult && <InitialStateView />}
                     {comparisonResult && (
-                        <div className="space-y-8 animate-fade-in">
+                        <div className="space-y-12 animate-fade-in pb-12">
                             <ComparisonHeader data={comparisonResult} />
                             <ComparisonTable data={comparisonResult} />
                             <AiAnalysis analysis={comparisonResult.analysis} />
@@ -195,15 +210,13 @@ const App: React.FC = () => {
                     )}
                 </div>
             </main>
-            <footer className="text-center p-8 mt-12 text-slate-500 dark:text-slate-500 text-sm">
-                <div className="space-y-2">
-                    <div>
-                        <a href="#" className="hover:text-sky-500 dark:hover:text-sky-400 transition-colors px-2">Privacy Policy</a>
-                        <span className="text-slate-400 dark:text-slate-600">|</span>
-                        <a href="#" className="hover:text-sky-500 dark:hover:text-sky-400 transition-colors px-2">Copyright Notice</a>
-                    </div>
-                    <p>&copy; {new Date().getFullYear()} ThisVsThat. All Rights Reserved.</p>
-                    <p className="pt-2 text-slate-400 dark:text-slate-600">Built by priyankt3i on Google AI Studio.</p>
+
+            <footer className="relative z-10 text-center py-8 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-slate-500 text-sm">
+                <p>&copy; {new Date().getFullYear()} ThisVsThat. AI-Powered Product Analysis.</p>
+                <div className="mt-2 flex justify-center space-x-4">
+                    <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>
+                    <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</a>
+                    <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">About</a>
                 </div>
             </footer>
         </div>
