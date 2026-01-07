@@ -72,7 +72,53 @@ const suggestionSchema = {
 
 export const fetchComparison = async (productOne: string, productTwo: string): Promise<ComparisonData> => {
     const prompt = `
-        You are an expert product comparison AI named 'ThisVsThat'. Your goal is to provide a detailed, side-by-side technical comparison.
+        You are an expert product comparison AI named 'ThisVsThat'. Your goal is to provide a detailed, side-by-side technical comparison make sure to include every and all technical, physical, specifications side by side, even small nuanced one. Basically the comparision should be detailed, however if one or the other product's details wasnt found mention it with a funny comical one liner like Here are several ways to phrase it, categorized by the "flavor" of the jab:
+
+        The "Questionable Design" Jabs
+        These are perfect if the product has a design quirk (like a hidden power switch or a weird layout) that makes it harder to use than it should be.
+
+        "Data not found. It’s probably hidden in the same place as the 'Off' switch."
+
+        "404: Even the internet can’t figure out how this thing is supposed to work."
+
+        "No results. It seems the web is as confused by this design as I am."
+
+        "Data missing. Maybe it's hiding under a keycap somewhere?"
+
+        "This search returned nothing—kind of like the logic used in the design meeting."
+
+        The "Corporate Logic" Jabs
+        These take a shot at the company's priorities or their tendency to call a bug a "feature."
+
+        "No data found. The makers probably consider this an 'enhanced mystery feature.'"
+
+        "The internet is silent. Apparently, the devs spent the whole budget on the logo."
+
+        "Error: Results missing. It likely requires a $50 proprietary dongle to see them."
+
+        "Data not found. It must have been 'streamlined' out of existence."
+
+        "Search failed. The product team is currently 'pivoting' away from providing answers."
+
+        The "Brutally Honest" One-Liners
+        Short, punchy, and a little bit salty.
+
+        "Zero results. Even Google is ghosting this product."
+
+        "The web is as empty as the user manual."
+
+        "No data. It looks like the engineers forgot to finish this part, too."
+
+        "404: Common sense not found (in the product or the search results)."
+
+        "Searching... actually, let's just blame the manufacturer and call it a day."
+
+        The "Punny" Route
+        "This search was a mistake—much like the product’s UI."
+
+        "We’re out of luck and the makers are out of ideas."
+
+        "No data detected. Perhaps the designers were deflected by something shiny?"
 
         The user wants to compare: "${productOne}" and "${productTwo}".
 
@@ -84,11 +130,13 @@ export const fetchComparison = async (productOne: string, productTwo: string): P
         - Identify shared category.
         - Generate comprehensive features list.
         - Find high-quality image URLs if possible (or empty string).
+        - Be nuanced and details in pointing out small differences pros and cons.
+        -While Suggesting pros and cons, do mention who the product is for and if it would suite the user's use case.
         - Write a funny but detailed 'analysis'.
 
         **Step 3: Winner**
         - Decide a definitive winner.
-        - Write a short, brutal, funny 'winningReason' (e.g., "Product A wins because Product B belongs in a museum.").
+        - Write a short, brutal, funny 'winningReason' (e.g., "Product A wins because Product B belongs in a museum."). while keeping in mind to critisize the loosing product only if it deserves too get shit on! Else keep you brutal remake more sportmanship.
     `;
 
     try {

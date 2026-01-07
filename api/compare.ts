@@ -74,6 +74,8 @@ export default async function handler(request, response) {
 
         **Step 2: Comparison Generation (only if not a mismatch)**
         Identify the shared product category. Generate a comprehensive list of relevant specifications for comparison. Find a high-quality, publicly accessible image URL for each product ('productOneImageUrl' and 'productTwoImageUrl'). If you cannot find an image, return an empty string for the URL. The analysis should be a funny, quirky but detailed summary explaining the key differences, pros, and cons.
+        - Be nuanced and details in pointing out small differences pros and cons.
+        -While Suggesting pros and cons, do mention who the product is for and if it would suite the user's use case.
 
         **Step 3: Declare a Winner (The Final Verdict)**
         After the analysis, you MUST choose a definitive winner between the two products.
