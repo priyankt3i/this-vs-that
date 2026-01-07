@@ -7,6 +7,7 @@ import AiAnalysis from './components/AiAnalysis';
 import Loader from './components/Loader';
 import ErrorDisplay from './components/ErrorDisplay';
 import WinnerCard from './components/WinnerCard';
+import FollowUpChat from './components/FollowUpChat';
 import { fetchComparison, generatePlaceholderImage } from './services/geminiService';
 import { ComparisonData, WittyCategoryMismatchError } from './types';
 import { getRandomIntro } from './utils/wittyIntros';
@@ -206,6 +207,7 @@ const App: React.FC = () => {
                             <ComparisonTable data={comparisonResult} />
                             <AiAnalysis analysis={comparisonResult.analysis} />
                             {comparisonResult.winnerInfo && <WinnerCard data={comparisonResult.winnerInfo} />}
+                            <FollowUpChat comparisonData={comparisonResult} />
                         </div>
                     )}
                 </div>

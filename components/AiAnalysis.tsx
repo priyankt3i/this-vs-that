@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface AiAnalysisProps {
     analysis: string;
@@ -14,8 +15,8 @@ const AiAnalysis: React.FC<AiAnalysisProps> = ({ analysis }) => {
                 </svg>
                 AI Analysis
             </h2>
-            <div className="prose prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-headings:text-slate-900 dark:prose-headings:text-white max-w-none whitespace-pre-wrap">
-                {analysis}
+            <div className="prose prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-headings:text-slate-900 dark:prose-headings:text-white max-w-none">
+                <MarkdownRenderer content={analysis} />
             </div>
         </div>
     );
