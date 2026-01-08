@@ -1,11 +1,23 @@
 
 import { GoogleGenAI, Modality } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let ai;
+const getAi = () => {
+    if (!ai) {
+        if (!process.env.API_KEY) throw new Error('Server missing API key');
+        ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    }
+    return ai;
+};
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: 'Method Not Allowed' });
+    }
+
+    if (!process.env.API_KEY) {
+        console.error('Server missing API_KEY env var.');
+        return response.status(500).json({ error: 'Server configuration error' });
     }
 
     const { productName } = request.body;
@@ -22,7 +34,7 @@ export default async function handler(request, response) {
     `;
 
     try {
-        const result = await ai.models.generateContent({
+        const result = await getAi().models.generateContent({
             model: 'gemini-2.5-flash-image',
             contents: {
                 parts: [{ text: prompt }],
